@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>GPTutor 교수자 리포트</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+          sans-serif;
+        background-color: #f0f4f9;
+        color: #1f2d3d;
+        padding: 40px;
+        line-height: 1.6;
+      }
+      h1 {
+        font-size: 28px;
+        color: #1a237e;
+        margin-bottom: 30px;
+      }
+      .section {
+        background: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+        margin-bottom: 40px;
+      }
+      h2 {
+        border-left: 5px solid #3949ab;
+        padding-left: 10px;
+        font-size: 20px;
+        margin-bottom: 20px;
+        color: #2c387e;
+      }
+      .chart-row {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+      .chart-col {
+        flex: 1;
+        min-width: 250px;
+      }
+      img.chart {
+        width: 100%;
+        border-radius: 10px;
+        border: 1px solid #cfd8dc;
+      }
+      .category-columns {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+      .category-block {
+        flex: 1;
+        min-width: 350px;
+      }
+      summary {
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+        color: #2e3b55;
+      }
+      details {
+        background: #f7f9fc;
+        border: 1px solid #dee2e6;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+      }
+      ul {
+        padding-left: 20px;
+        margin-top: 10px;
+      }
+      li {
+        margin-bottom: 6px;
+        color: #37474f;
+      }
+      .insight-section {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+      }
+      .insight-block {
+        background: #e8eaf6;
+        padding: 20px 24px;
+        border-left: 6px solid #3f51b5;
+        border-radius: 10px;
+      }
+      .insight-block h3 {
+        margin-top: 0;
+        color: #1a237e;
+      }
+      .insight-block p {
+        margin: 10px 0;
+      }
+      .insight-block ul {
+        list-style: disc;
+        margin-left: 20px;
+      }
+      .insight-block table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 10px;
+      }
+      .insight-block table,
+      .insight-block th,
+      .insight-block td {
+        border: 1px solid #c5cae9;
+      }
+      .insight-block th,
+      .insight-block td {
+        padding: 8px 10px;
+        text-align: center;
+      }
+      .insight-block th {
+        background-color: #d1d9ff;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>📘 GPTutor 교수자 리포트 - {{ created }}</h1>
+
+    <div class="section">
+      <h2>📊 질문 통계 시각화</h2>
+      <div class="chart-row">
+        <div class="chart-col">
+          <img class="chart" src="data:image/png;base64,{{ charts['hour'] }}" />
+        </div>
+        <div class="chart-col">
+          <img
+            class="chart"
+            src="data:image/png;base64,{{ charts['kmeans'] }}"
+          />
+        </div>
+        <div class="chart-col">
+          <img
+            class="chart"
+            src="data:image/png;base64,{{ charts['similarity'] }}"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>📂 카테고리별 질문</h2>
+      <div class="category-columns">
+        <div class="category-block">
+          <h3>📘 KMeans 기준</h3>
+          {% for cat, questions in kmeans_clustered.items() %}
+          <details>
+            <summary>📂 {{ cat }} ({{ questions | length }})</summary>
+            <ul>
+              {% for q in questions %}
+              <li>{{ q }}</li>
+              {% endfor %}
+            </ul>
+          </details>
+          {% endfor %}
+        </div>
+        <div class="category-block">
+          <h3>📗 Similarity 기준</h3>
+          {% for cat, questions in sim_clustered.items() %}
+          <details>
+            <summary>📂 {{ cat }} ({{ questions | length }})</summary>
+            <ul>
+              {% for q in questions %}
+              <li>{{ q }}</li>
+              {% endfor %}
+            </ul>
+          </details>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🧠 GPT 기반 교수자 인사이트</h2>
+      <div class="insight-section">{{ feedback | safe }}</div>
+    </div>
+  </body>
+</html>
